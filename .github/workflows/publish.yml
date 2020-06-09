@@ -8,10 +8,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build manifest
-      run: |
-        $Tag = ${Env:GITHUB_REF} -Replace "refs/tags/",""
-        .\TrUtilities\generateManifest.ps1 -ModuleVersion $Tag
+      run: .\TrUtilities\generateManifest.ps1 -ModuleVersion "${{ github.event.release.tag_name }}"
     - name: Lint manifest
-      run: Test-ModuleManifest -Path .\TrUtilities\TrUtilities.psd1
+      run: Test-ModuleManifest -Path ".\TrUtilities\TrUtilities.psd1"
     - name: Publish Module
-      run: Publish-Module -Path ".\TrUtilities" -NuGetApiKey "${{ secrets.POWERSHELL_GALLERY_KEY }}" -Confirm -ErrorAction Stop -Force
+      run: Publish-Module -Path ".\TrUtilities" -NuGetApiKey "${{ secrets.POWERSHELL_GALLERY_KEY }}" -Confirm -ErrorAction Stop -Force -Debug
