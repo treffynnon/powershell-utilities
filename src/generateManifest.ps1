@@ -46,7 +46,7 @@ $CmdletsToExport = @()
 $AliasesToExport = @()
 
 New-ModuleManifest `
-	-Path .\$ModuleName.psd1 `
+	-Path .\src\$ModuleName.psd1 `
 	-Guid ([guid]::NewGuid()) `
 	-RequiredAssemblies $RequiredAssemblies `
 	-Author $Author `
