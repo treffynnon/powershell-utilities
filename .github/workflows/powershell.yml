@@ -1,0 +1,22 @@
+name: "Treffynnon's PowerShell scripting utilities"
+on: [push]
+
+jobs:
+  lint:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install PSScriptAnalyzer
+      run: Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck
+    - name: Invoke linter
+      run: Invoke-ScriptAnalyzer -Path .\
+  test:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build manifest
+      run: .\generateManifest.ps1
+    - name: Install Pester
+      run: Install-Module -Name Pester -Force -SkipPublisherCheck
+    - name: Invoke tests
+      run: Invoke-Pester .\

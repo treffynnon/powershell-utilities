@@ -1,0 +1,7 @@
+# Treffynnon's PowerShell scripting utilities
+
+This module provides a selection of utilities to make PowerShell script authorship easier.
+
+## Running the tests
+
+Make sure you have updated Pester on your machine first https://pester.dev/docs/introduction/installation
