@@ -9,11 +9,11 @@ jobs:
     - name: Install PSScriptAnalyzer
       run: Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck
     - name: Invoke linter
-      run: Invoke-ScriptAnalyzer -Path .\src\
+      run: Invoke-ScriptAnalyzer -Path .\TrUtilities\
     - name: Build manifest
-      run: .\src\generateManifest.ps1
+      run: .\TrUtilities\generateManifest.ps1
     - name: Lint manifest
-      run: Test-ModuleManifest -Path .\src\TrUtilities.psd1
+      run: Test-ModuleManifest -Path .\TrUtilities\TrUtilities.psd1
   test:
     runs-on: windows-latest
     steps:
@@ -21,4 +21,4 @@ jobs:
     - name: Install Pester
       run: Install-Module -Name Pester -Force -SkipPublisherCheck
     - name: Invoke tests
-      run: Invoke-Pester .\src\
+      run: Invoke-Pester .\TrUtilities\
