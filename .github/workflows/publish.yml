@@ -7,6 +7,10 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
+    - uses: nuget/setup-nuget@v1
+      with:
+        nuget-api-key: ${{ secrets.POWERSHELL_GALLERY_KEY }}
+        nuget-version: '5.1.0'
     - name: Build manifest
       run: .\TrUtilities\generateManifest.ps1 -ModuleVersion "${{ github.event.release.tag_name }}"
     - name: Lint manifest
