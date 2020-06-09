@@ -10,7 +10,7 @@ jobs:
     - name: Build manifest
       run: |
         $Tag = ${Env:GITHUB_REF} -Replace "refs/tags/",""
-        .\src\generateManifest.ps1 -ModuleVersion $Tag
+        .\TrUtilities\generateManifest.ps1 -ModuleVersion $Tag
     - name: Lint manifest
       run: Test-ModuleManifest -Path .\TrUtilities\TrUtilities.psd1
     - name: Publish Module
