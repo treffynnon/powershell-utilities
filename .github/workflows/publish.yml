@@ -1,4 +1,4 @@
-name: "Treffynnon's PowerShell scripting utilities"
+name: "Publish to PowerShell Gallery"
 on:
   release:
     types: [created]
@@ -8,9 +8,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - uses: nuget/setup-nuget@v1
+      # https://sqldbawithabeard.com/2019/11/26/fixing-the-failed-to-generate-the-compressed-file-for-module-cprogram-filesdotnetdotnet-exe-error-when-deploying-to-the-powershell-gallery-using-azure-devops/
       with:
         nuget-api-key: ${{ secrets.POWERSHELL_GALLERY_KEY }}
-        nuget-version: '5.1.0'
+        nuget-version: '5.1.0' # newer version seem to break the publication code
     - name: Build manifest
       run: .\TrUtilities\generateManifest.ps1 -ModuleVersion "${{ github.event.release.tag_name }}"
     - name: Lint manifest
@@ -18,4 +19,4 @@ jobs:
     - name: Publish Module
       run: |
         Write-Host "Publishing version ${{ github.event.release.tag_name }}"
-        Publish-Module -Path ".\TrUtilities" -NuGetApiKey "${{ secrets.POWERSHELL_GALLERY_KEY }}" -Confirm -ErrorAction Stop -Force -Debug
+        Publish-Module -Path ".\TrUtilities" -NuGetApiKey "${{ secrets.POWERSHELL_GALLERY_KEY }}" -Confirm -ErrorAction Stop -Force

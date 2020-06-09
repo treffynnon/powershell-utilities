@@ -1,4 +1,4 @@
-name: "Treffynnon's PowerShell scripting utilities"
+name: "Test and lint"
 on: [push, pull_request]
 
 jobs:
