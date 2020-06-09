@@ -7,12 +7,10 @@ jobs:
     runs-on: windows-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Get tag name
+    - name: Build manifest
       run: |
         $Tag = ${Env:GITHUB_REF} -Replace "refs/tags/",""
-        $Env:GIT_TAG_NAME = $Tag
-    - name: Build manifest
-      run: .\TrUtilities\generateManifest.ps1 -ModuleVersion "${Env:GIT_TAG_NAME}"
+        .\src\generateManifest.ps1 -ModuleVersion $Tag
     - name: Lint manifest
       run: Test-ModuleManifest -Path .\TrUtilities\TrUtilities.psd1
     - name: Publish Module
