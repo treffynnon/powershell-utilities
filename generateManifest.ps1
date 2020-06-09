@@ -1,23 +1,9 @@
-<#
-Export-ModuleMember Write-TrInfo
-Export-ModuleMember Write-TrHint
-Export-ModuleMember Write-TrInvalid
-Export-ModuleMember Write-TrError
-Export-ModuleMember Invoke-TrCommand
-Export-ModuleMember Invoke-TrRetry
-Export-ModuleMember Write-TrInvokeToFatal
-Export-ModuleMember Invoke-TrSuccessOrFailed
-
-Export-ModuleMember Confirm-TrValidEmailAddress
-Export-ModuleMember Confirm-TrValidMachineName
-Export-ModuleMember Confirm-TrValidGuid
-Export-ModuleMember Read-TrUserInput
-#>
-
-$ModuleName = "Tr"
+Param (
+	[string] $ModuleVersion = "1.0.0"
+)
+$ModuleName = "TrUtilities"
 $Author = "Simon Holywell"
 $Tags = "Treffynnon", "PowerShell", "Utilities"
-$ModuleVersion = "1.0.0.0"
 $PowerShellVersion = "4.0.0"
 $Description = "Utilities for writing PowerShell scripts"
 $CopyRight = @"
@@ -35,11 +21,10 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 "@
-$LicenseURI = "https://www.apache.org/licenses/LICENSE-2.0.html"
+$LicenceURI = "https://www.apache.org/licenses/LICENSE-2.0.html"
 $ProjectURI = "https://www.simonholywell.com"
 $RequiredAssemblies = ''
 $NestedModules = @(
-	".\Tr.psm1",
 	".\TrUserInput\TrUserInput.psm1",
 	".\TrErrorHandling\TrErrorHandling.psm1"
 )
@@ -61,7 +46,6 @@ $CmdletsToExport = @()
 $AliasesToExport = @()
 
 New-ModuleManifest `
-	-RootModule "$ModuleName.psm1" `
 	-Path .\$ModuleName.psd1 `
 	-Guid ([guid]::NewGuid()) `
 	-RequiredAssemblies $RequiredAssemblies `
@@ -73,7 +57,7 @@ New-ModuleManifest `
 	-FunctionsToExport $FunctionsToExport `
 	-Tags $Tags `
 	-PowerShellVersion $PowerShellVersion `
-	-LicenseUri $LicenseURI `
+	-LicenseUri $LicenceURI `
 	-ProjectUri $ProjectURI `
 	-AliasesToExport $AliasesToExport `
 	-CmdletsToExport $CmdletsToExport

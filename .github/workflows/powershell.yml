@@ -1,21 +1,23 @@
 name: "Treffynnon's PowerShell scripting utilities"
-on: [push]
+on: [push, pull_request]
 
 jobs:
   lint:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
     - name: Install PSScriptAnalyzer
       run: Install-Module -Name PSScriptAnalyzer -Force -SkipPublisherCheck
     - name: Invoke linter
       run: Invoke-ScriptAnalyzer -Path .\
+    - name: Build manifest
+      run: .\generateManifest.ps1
+    - name: Lint manifest
+      run: Test-ModuleManifest -Path .\TrUtilities.psd1
   test:
     runs-on: windows-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Build manifest
-      run: .\generateManifest.ps1
+    - uses: actions/checkout@v2
     - name: Install Pester
       run: Install-Module -Name Pester -Force -SkipPublisherCheck
     - name: Invoke tests

@@ -1,0 +1,15 @@
+name: "Treffynnon's PowerShell scripting utilities"
+on:
+  release:
+    types: [created]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build manifest
+      run: .\generateManifest.ps1 -ModuleVersion "${{ GITHUB_REF }}"
+    - name: Lint manifest
+      run: Test-ModuleManifest -Path .\TrUtilities.psd1
+    - name: Publish Module
+      run: Publish-Module -Path "..\TrUtilities" -NuGetApiKey "${{ secrets.POWERSHELL_GALLERY_KEY }}" -Confirm -ErrorAction Stop -Force
