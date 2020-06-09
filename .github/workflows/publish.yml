@@ -16,4 +16,6 @@ jobs:
     - name: Lint manifest
       run: Test-ModuleManifest -Path ".\TrUtilities\TrUtilities.psd1"
     - name: Publish Module
-      run: Publish-Module -Path ".\TrUtilities" -NuGetApiKey "${{ secrets.POWERSHELL_GALLERY_KEY }}" -Confirm -ErrorAction Stop -Force -Debug
+      run: |
+        Write-Host "Publishing version ${{ github.event.release.tag_name }}"
+        Publish-Module -Path ".\TrUtilities" -NuGetApiKey "${{ secrets.POWERSHELL_GALLERY_KEY }}" -Confirm -ErrorAction Stop -Force -Debug
