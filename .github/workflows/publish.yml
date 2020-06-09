@@ -8,7 +8,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build manifest
-      run: .\generateManifest.ps1 -ModuleVersion "${{ GITHUB_REF }}"
+      run: .\generateManifest.ps1 -ModuleVersion "${{ github.ref }}"
     - name: Lint manifest
       run: Test-ModuleManifest -Path .\TrUtilities.psd1
     - name: Publish Module
