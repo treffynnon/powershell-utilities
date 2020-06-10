@@ -38,8 +38,17 @@ Describe $ThisModuleName {
 	Describe 'Write-TrInfo' {
 		It "Should print an info message" {
 			Write-TrInfo "Hello" -Scope It
-			Assert-ModuleMockCalled -CommandName Write-Host -Times 2 -Exactly
+			Assert-ModuleMockCalled -CommandName Write-Host -Exactly 2
 			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -eq "[INFO]" } -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -like "*Hello*" } -Scope It
+		}
+	}
+
+	Describe 'Write-TrWarn' {
+		It "Should print a warning message" {
+			Write-TrWarn "Hello" -Scope It
+			Assert-ModuleMockCalled -CommandName Write-Host -Exactly 2
+			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -eq "[WARN]" } -Scope It
 			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -like "*Hello*" } -Scope It
 		}
 	}
@@ -47,7 +56,7 @@ Describe $ThisModuleName {
 	Describe 'Write-TrHint' {
 		It "Should print a hint message" {
 			Write-TrHint "Hello"
-			Assert-ModuleMockCalled Write-Host -Times 2 -Exactly -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 2 -Scope It
 			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -eq "[HINT]" } -Scope It
 			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -like "*Hello*" } -Scope It
 		}
@@ -57,7 +66,7 @@ Describe $ThisModuleName {
 		It "Should print an error message" {
 			$Sample = script:New-SampleErrorRecord
 			Write-TrError $Sample
-			Assert-ModuleMockCalled Write-Host -Times 2 -Exactly -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 2 -Scope It
 			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -eq "[ERROR]" } -Scope It
 			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -like "*Hello*" } -Scope It
 		}
@@ -66,7 +75,7 @@ Describe $ThisModuleName {
 	Describe 'Write-TrInvalid' {
 		It "Should print an invalid message" {
 			Write-TrInvalid "Hello"
-			Assert-ModuleMockCalled Write-Host -Times 2 -Exactly -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 2 -Scope It
 			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -eq "[INVALID]" } -Scope It
 			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -like "*Hello*" } -Scope It
 		}
@@ -74,7 +83,7 @@ Describe $ThisModuleName {
 			$Got = "Foo"
 			$Expected = "Bar"
 			Write-TrInvalid -Got $Got -Expected $Expected
-			Assert-ModuleMockCalled Write-Host -Times 2 -Exactly -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 2 -Scope It
 			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -like "*$Got*" } -Scope It
 			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Object -like "*$Expected*" } -Scope It
 		}
@@ -90,7 +99,7 @@ Describe $ThisModuleName {
 			$Value = Invoke-TrCommand {
 				Invoke-MeForTesting -ErrorAction Stop
 			}
-			Assert-MockCalled Invoke-MeForTesting -Times 1 -Exactly -Scope It
+			Assert-MockCalled Invoke-MeForTesting -Exactly 1 -Scope It
 			ShouldSuccess $Value
 		}
 
@@ -99,7 +108,7 @@ Describe $ThisModuleName {
 			{ Invoke-TrCommand -Fatal:$True {
 					Invoke-MeForTesting -EA Stop
 				} } | Should -Throw
-			Assert-MockCalled Invoke-MeForTesting -Times 1 -Exactly -Scope It
+			Assert-MockCalled Invoke-MeForTesting -Exactly 1 -Scope It
 		}
 	}
 
@@ -116,7 +125,7 @@ Describe $ThisModuleName {
 			$Value = Invoke-TrRetry -RetryCount 0 {
 				Invoke-MeForTesting -ErrorAction Stop
 			}
-			Assert-MockCalled Invoke-MeForTesting -Times 1 -Exactly -Scope It
+			Assert-MockCalled Invoke-MeForTesting -Exactly 1 -Scope It
 			ShouldSuccess $Value
 		}
 
@@ -125,7 +134,7 @@ Describe $ThisModuleName {
 			{ Invoke-TrRetry -Fatal:$True -RetryCount 0 {
 					Invoke-MeForTesting -EA Stop
 				} } | Should -Throw
-			Assert-MockCalled Invoke-MeForTesting -Times 1 -Exactly -Scope It
+			Assert-MockCalled Invoke-MeForTesting -Exactly 1 -Scope It
 		}
 
 		It "Should fail to invoke a command with a throw and a retry" {
@@ -133,9 +142,9 @@ Describe $ThisModuleName {
 			{ Invoke-TrRetry -Fatal:$True -RetryCount 3 -RetryWait 1 {
 					Invoke-MeForTesting -EA Stop
 				} } | Should -Throw
-			Assert-MockCalled Invoke-MeForTesting -Times 4 -Exactly -Scope It
-			Assert-MockCalled Start-Sleep -Times 4 -Exactly -Scope It
-			Assert-MockCalled Write-TrError -Times 4 -Exactly -Scope It
+			Assert-MockCalled Invoke-MeForTesting -Exactly 4 -Scope It
+			Assert-MockCalled Start-Sleep -Exactly 4 -Scope It
+			Assert-MockCalled Write-TrError -Exactly 4 -Scope It
 			Assert-ModuleMockCalled Write-TrInfo -Exactly 4 -ParameterFilter { $Message -like "*Waiting 1 seconds...*" } -Scope It
 			Assert-ModuleMockCalled Write-TrInfo -Exactly 0 -ParameterFilter { $Message -like "*Retry attempt 0 of 3*" } -Scope It
 			Assert-ModuleMockCalled Write-TrInfo -Exactly 1 -ParameterFilter { $Message -like "*Retry attempt 1 of 3*" } -Scope It
@@ -157,9 +166,9 @@ Describe $ThisModuleName {
 			$Result = Invoke-TrRetry -Fatal:$True -RetryCount 3 -RetryWait 1 {
 				Invoke-MeForTesting -EA Stop
 			}
-			Assert-MockCalled Invoke-MeForTesting -Times 4 -Exactly -Scope It
-			Assert-MockCalled Start-Sleep -Times 3 -Exactly -Scope It
-			Assert-MockCalled Write-TrError -Times 3 -Exactly -Scope It
+			Assert-MockCalled Invoke-MeForTesting -Exactly 4 -Scope It
+			Assert-MockCalled Start-Sleep -Exactly 3 -Scope It
+			Assert-MockCalled Write-TrError -Exactly 3 -Scope It
 			Assert-ModuleMockCalled Write-TrInfo -Exactly 3 -ParameterFilter { $Message -like "*Waiting 1 seconds...*" } -Scope It
 			Assert-ModuleMockCalled Write-TrInfo -Exactly 0 -ParameterFilter { $Message -like "*Retry attempt 0 of 3*" } -Scope It
 			Assert-ModuleMockCalled Write-TrInfo -Exactly 1 -ParameterFilter { $Message -like "*Retry attempt 1 of 3*" } -Scope It

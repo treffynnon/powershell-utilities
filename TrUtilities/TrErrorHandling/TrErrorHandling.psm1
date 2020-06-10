@@ -3,6 +3,7 @@
 # Flow control and error handling				 #
 #																				 #
 #=========================================#
+
 <#
 .SYNOPSIS
 
@@ -21,7 +22,7 @@ function Write-TrInfo {
 		[ValidateNotNullOrEmpty()]
 		[string] $Message
 	)
-	Write-Host -BackgroundColor Blue -ForegroundColor White -NoNewline "[INFO]"
+	Write-Host "[INFO]" -ForegroundColor White -BackgroundColor Blue -NoNewline
 	Write-Host " ${Message}."
 }
 
@@ -43,8 +44,8 @@ function Write-TrHint {
 		[ValidateNotNullOrEmpty()]
 		[string] $Message
 	)
-	Write-Host "[HINT]" -NoNewline -ForegroundColor White -BackgroundColor Blue
-	Write-Host " $Message"
+	Write-Host "[HINT]" -ForegroundColor White -BackgroundColor Blue -NoNewline
+	Write-Host " $Message."
 }
 
 <#
@@ -56,7 +57,7 @@ Given an ErrorRecord write a friendly non-fatal error to the screen
 
 This is the ErrorRecord that is to be formatted as a string
 
-.PARAMETER ErrorMessage
+.PARAMETER Message
 
 An optional custom message to use instead of the ErrorRecord
 
@@ -73,7 +74,7 @@ function Write-TrError {
 		[System.Management.Automation.ErrorRecord] $ErrorToFormat = { },
 		[string] $Message = $Null
 	)
-	Write-Host -BackgroundColor Red -ForegroundColor White -NoNewline "[ERROR]"
+	Write-Host "[ERROR]" -ForegroundColor White -BackgroundColor Red -NoNewline
 	if ($Message) {
 		Write-Host " ${Message}."
 	} elseif ($ErrorToFormat) {
