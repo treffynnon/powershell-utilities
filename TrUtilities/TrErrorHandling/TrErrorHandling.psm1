@@ -29,6 +29,28 @@ function Write-TrInfo {
 <#
 .SYNOPSIS
 
+Given a string message write an info message to the screen
+
+.PARAMETER Message
+
+The content of the message
+
+.LINK
+
+Write-Host
+#>
+function Write-TrWarn {
+	Param (
+		[ValidateNotNullOrEmpty()]
+		[string] $Message
+	)
+	Write-Host "[WARN]" -ForegroundColor Yellow -NoNewline
+	Write-Host " ${Message}."
+}
+
+<#
+.SYNOPSIS
+
 Given a string message write a hint message to the screen
 
 .PARAMETER Message
