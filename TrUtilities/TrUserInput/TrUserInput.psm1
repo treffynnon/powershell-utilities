@@ -1,5 +1,3 @@
-Import-Module ..\TrErrorHandling\TrErrorHandling.psm1
-
 #=========================================#
 #																				 #
 # User input and validation							 #
