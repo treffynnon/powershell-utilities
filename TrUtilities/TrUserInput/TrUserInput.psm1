@@ -1,4 +1,4 @@
-Import-Module .\TrErrorHandling\TrErrorHandling.psm1
+Import-Module ..\TrErrorHandling\TrErrorHandling.psm1
 
 #=========================================#
 #																				 #
