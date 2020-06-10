@@ -205,6 +205,10 @@ An optional error message to be used instead of the exception print out
 If set to truthy then the error is thrown, which causes the script to
 exit early. Default is $False.
 
+.PARAMETER Silent
+
+If the command errors and $Silent is $True then the error will not be printed
+
 .LINK
 
 Write-TrError
@@ -218,7 +222,8 @@ function Invoke-TrCommand {
 		[ValidateNotNullOrEmpty()]
 		[scriptblock] $Invoke,
 		[string] $ErrorMessage = $Null,
-		[boolean] $Fatal = $False
+		[boolean] $Fatal = $False,
+		[boolean] $Silent = $False
 	)
 	$DidError = $False
 	$LastError = $Error[0]
@@ -239,10 +244,12 @@ function Invoke-TrCommand {
 		if ($Fatal) {
 			Throw $CurrentError
 		}
-		if ($CurrentError."ErrorRecord") {
-			Write-TrError -ErrorToFormat $CurrentError."ErrorRecord" -Message $ErrorMessage
-		} else {
-			Write-TrError -ErrorToFormat $CurrentError -Message $ErrorMessage
+		if (-not $Silent) {
+			if ($CurrentError."ErrorRecord") {
+				Write-TrError -ErrorToFormat $CurrentError."ErrorRecord" -Message $ErrorMessage
+			} else {
+				Write-TrError -ErrorToFormat $CurrentError -Message $ErrorMessage
+			}
 		}
 	}
 	Return @{
@@ -412,14 +419,16 @@ Write-Host
 #>
 function Invoke-TrSuccessOrFailed {
 	Param (
+		[Parameter(Mandatory=$True)]
 		[ValidateNotNullOrEmpty()]
 		[scriptblock] $Invoke,
+		[Parameter(Mandatory=$True)]
 		[ValidateNotNullOrEmpty()]
 		[string] $Prompt,
 		[boolean] $ReturnValue = $False
 	)
 	Write-Host $Prompt -NoNewline
-	$Result = Invoke-TrCommand $Invoke
+	$Result = Invoke-TrCommand $Invoke -Silent:$True
 	if ($Result."Success") {
 		Write-Host " Success." -ForegroundColor Green
 		if ($ReturnValue) {

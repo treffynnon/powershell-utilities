@@ -180,4 +180,48 @@ Describe $ThisModuleName {
 			ShouldSuccess $Result "I ran!"
 		}
 	}
+
+	Describe 'Invoke-TrSuccessOrFailed' {
+		BeforeAll {
+			Mock -CommandName Write-Host -MockWith { }
+		}
+
+		It "Should return true on success" {
+			Invoke-TrSuccessOrFailed `
+				{ "hello" } `
+				"Say hello" | Should -Be $True
+			Assert-ModuleMockCalled Write-Host -Exactly 2 -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Message -like "*Say hello*" } -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Message -like "*Success*" } -Scope It
+		}
+
+		It "Should return false on failure" {
+			Invoke-TrSuccessOrFailed `
+				{ Throw "Error" } `
+				"Say hello" | Should -Be $False
+			Assert-ModuleMockCalled Write-Host -Exactly 2 -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Message -like "*Say hello*" } -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Message -like "*Failed*" } -Scope It
+		}
+
+		It "Should return the value from the wrapped function" {
+			Invoke-TrSuccessOrFailed `
+				{ "hello" } `
+				"Say hello" `
+				-ReturnValue:$True | Should -Be "hello"
+			Assert-ModuleMockCalled Write-Host -Exactly 2 -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Message -like "*Say hello*" } -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Message -like "*Success*" } -Scope It
+		}
+
+		It "Should return false even when ReturnValue is set" {
+			Invoke-TrSuccessOrFailed `
+				{ Throw "Error" } `
+				"Say hello" `
+				-ReturnValue:$True | Should -Be $False
+			Assert-ModuleMockCalled Write-Host -Exactly 2 -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Message -like "*Say hello*" } -Scope It
+			Assert-ModuleMockCalled Write-Host -Exactly 1 -ParameterFilter { $Message -like "*Failed*" } -Scope It
+		}
+	}
 }
