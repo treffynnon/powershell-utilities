@@ -30,6 +30,7 @@ $NestedModules = @(
 )
 $FunctionsToExport = @(
 	"Write-TrInfo",
+	"Write-TrWarn",
 	"Write-TrHint",
 	"Write-TrInvalid",
 	"Write-TrError",
